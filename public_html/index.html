@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app="tasks">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.5/css/bootstrap.min.css">
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Tasks</a>
+                </div>
+                <div>
+                    <!--                    <ul class="nav navbar-nav navbar-right">
+                                            <li><a href="#">Home</a></li>
+                                            <li><a href="#">Page 1</a></li>
+                                            <li><a href="#">Page 2</a></li>
+                                            <li><a href="#">Page 3</a></li>
+                                        </ul>-->
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="container-fluid ">
+            <div class="col-lg-6 col-lg-offset-3" ng-controller="TaskControler as taskCtrl">
+                <form novalidate="novalidate">
+                    <h3 class="text-center">New Task</h3>
+                    <div class="form-group">
+                        <label for="task-title">Task title</label>
+                        <input type="text" id="task-title" name="taskTitle" class="form-control input-lg"
+                               ng-model="formModel.title"
+                               ng-pattern="/^[A-Za-z0-9_\-]{1,65}$/"
+                               ng-minlength="3"
+                               ng-maxlength="64"
+                               ng-pattern-err-type="badTitle"
+                               required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="task-description">Task description</label>
+                        <textarea id="task-description" name="taskTitle" class="form-control input-lg"
+                               ng-model="formModel.description"
+                               required="required"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button class="btn btn-lg btn-success" type="submit">Save</button>
+                    </div>
+                </form>
+                <pre class="">
+                {{formModel | json}}
+
+                </pre>
+            </div>
+
+
+        </div>
+        <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular-auto-validate/dist/jcs-auto-validate.min.js"></script>
+        <script type="text/javascript" src="js/angular-modules/app.js"></script>
+    </body>
+</html>
