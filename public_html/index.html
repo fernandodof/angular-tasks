@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="tasks">
+<html ng-app="phonebook">
     <head>
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
@@ -12,7 +12,7 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">Tasks</a>
+                    <a class="navbar-brand" href="#">People</a>
                 </div>
                 <div>
                     <!--                    <ul class="nav navbar-nav navbar-right">
@@ -26,26 +26,49 @@
         </nav>
 
         <div class="container-fluid ">
-            <div class="col-lg-6 col-lg-offset-3" ng-controller="TaskControler
-                    as
-                    taskCtrl">
+            <div class="col-lg-6 col-lg-offset-3" ng-controller="PersonControler">
                 <form novalidate="novalidate" ng-submit="onSubmit()">
-                    <h3 class="text-center">New Task</h3>
+                    <h3 class="text-center">New Contact</h3>
                     <div class="form-group">
-                        <label for="task-title">Task title</label>
-                        <input type="text" id="task-title" name="taskTitle" class="form-control input-lg"
-                               ng-model="formModel.title"
-                               ng-pattern="/^[A-Za-z0-9_\-]{1,65}$/"
-                               ng-minlength="3"
-                               ng-maxlength="64"
-                               ng-pattern-err-type="badTitle"
+                        <label for="name">Person Name</label>
+                        <input type="text" id="name" name="name" class="form-control input-lg"
+                               ng-model="formModel.name"
+                               ng-pattern="/^[A-Za-z\s]{1,101}$/"
+                               ng-minlength="2"
+                               ng-maxlength="100"
+                               ng-min-err-type = "shotName"
+                               ng-max-err-type = "longName"
+                               ng-pattern-err-type="badName"
                                required="required">
                     </div>
                     <div class="form-group">
-                        <label for="task-description">Task description</label>
-                        <textarea id="task-description" name="taskTitle" class="form-control input-lg"
-                                  ng-model="formModel.description"
-                                  required="required"></textarea>
+                        <label for="email">Email</label>
+                        <input type="email" ng-model="formModel.email" required="required" id="email" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="pic">Prifile pictire</label>
+                        <input type="text" ng-model="formModel.photo" required="required" id="pic" class="form-control" 
+                               readonly>
+                    </div>
+
+                    <div class="form-group" >
+                        <label for="sex">Sex</label>
+                        <select class="form-control"
+                                ng-model="formModel.sex" id="sex" required>
+                            <option value="" >Choose here</option >
+                            <option value="Male" >Male</option >
+                            <option value="email" >Female</option >
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birthdate">Birthdate</label>
+                        <input type="t" ng-model="formModel.birthdate" id="birthdate" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone number</label>
+                        <input type="text" ng-model="formModel.phone" id="phone" class="form-control" required> 
                     </div>
 
                     <div class="form-group">
@@ -59,40 +82,41 @@
                     </div>
                 </form>
 
-                <div id="task-list" class="col-lg-12">
-                    <div class="col-lg-6">
+                <div id="list">
+                    <!--                    <div class="row col-xs-12">
+                                            <form class="form-inline well well-sm">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="title" placeholder="Name" ng-model="search.title">
+                                                    <span class="glyphicon glyphicon-search"></span>
+                                                </div>
+                                            </form>
+                                        </div>-->
+                    <div class="">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Title</th>
-                                    <th>Status</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone number</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="task in tasks" ng-click="selectTask(task, $index)" 
-                                    ng-class="$index==selectedTaskIndex ? 'selected-row' : ''">
+                                <tr ng-repeat="person in people">
                                     <td>{{$index + 1}}</td>
-                                    <td>{{task.title}}</td>
-                                    <td>{{task.completed}}</td>
+                                    <td>{{person.name}}</td>
+                                    <td>{{person.email}}</td>
+                                    <td>{{person.phone}}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Details</h3>
-                            </div>
-                            <div class="panel-body">
-                                {{selectedTask.description}}
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="col-lg-4 pull-right">
+
+                    </div>-->
 
                 </div>
             </div>
-
         </div>
         <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>

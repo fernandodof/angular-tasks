@@ -1,34 +1,38 @@
-var app = angular.module('tasks', [
+var app = angular.module('phonebook', [
     'jcs-autoValidate',
     'angular-ladda'
 ]);
 
 app.run(function (defaultErrorMessageResolver) {
     defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
-        errorMessages['shotTitle'] = 'You must type at least {} characters';
-        errorMessages['longTitle'] = 'You must type no more than {} characters';
-        errorMessages['badTitle'] = 'You must type only numbers, letters, "_" and "-"';
+        //Name
+        errorMessages['shotName'] = 'You must type at least {} characters';
+        errorMessages['longName'] = 'You must type no more than {} characters';
+        errorMessages['badName'] = 'You must letters"';
+        
     });
 
 });
 
-var api_base = 'http://192.186.0.102:8000/api/';
+var api_base = 'http://localhost:8000/api';
 
-app.controller('TaskControler', function ($scope, $http) {
+app.controller('PersonControler', function ($scope, $http) {
     $scope.formModel = {};
+    $scope.formModel.photo = "http://lauriefurman.com/facebook-profile-picture-silhouette-funny-713.jpg";
     $scope.submiting = false;
+    $scope.search = {};
 
     $scope.onSubmit = function () {
         $scope.submiting = true;
         console.log('submited');
         console.log($scope.formModel);
 
-        $http.post(api_base + '/tasks/', $scope.formModel)
+        $http.post(api_base + '/person/', $scope.formModel)
                 .success(function (data) {
                     console.log(data);
                     console.log('\\o/');
                     $scope.submiting = false;
-                    $scope.tasks.push(data);
+                    $scope.people.push(data);
                 })
                 .error(function (data) {
                     console.log(data);
@@ -37,22 +41,21 @@ app.controller('TaskControler', function ($scope, $http) {
                 });
     };
 
-    $scope.selectedTaskIndex = null;
-    $scope.selectedTask = null;
-    $scope.selectTask = function (task, index) {
-        $scope.selectedTaskIndex = index;
-        $scope.selectedTask = task;
+    $scope.selectedPersonIndex = null;
+    $scope.selectedPerson = null;
+    $scope.selectPerson = function (person, index) {
+        $scope.selectedPersonIndex = index;
+        $scope.selectedPerson = person;
     };
 
-    $scope.tasks = {};
-    $http.get(api_base + '/tasks/')
+    $scope.people = {};
+    $http.get(api_base + '/person/')
             .success(function (data) {
-                $scope.tasks = data;
+                $scope.people = data;
             })
             .error(function (data) {
                 console.log(data);
             });
-
 
 
 });
