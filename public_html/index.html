@@ -5,6 +5,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="bower_components/ladda/dist/ladda-themeless.min.css">
+        <link rel="stylesheet" type="text/css" href="css/global.css">
     </head>
     <body>
         <nav class="navbar navbar-default">
@@ -23,10 +25,11 @@
             </div>
         </nav>
 
-
         <div class="container-fluid ">
-            <div class="col-lg-6 col-lg-offset-3" ng-controller="TaskControler as taskCtrl">
-                <form novalidate="novalidate">
+            <div class="col-lg-6 col-lg-offset-3" ng-controller="TaskControler
+                    as
+                    taskCtrl">
+                <form novalidate="novalidate" ng-submit="onSubmit()">
                     <h3 class="text-center">New Task</h3>
                     <div class="form-group">
                         <label for="task-title">Task title</label>
@@ -41,20 +44,54 @@
                     <div class="form-group">
                         <label for="task-description">Task description</label>
                         <textarea id="task-description" name="taskTitle" class="form-control input-lg"
-                               ng-model="formModel.description"
-                               required="required"></textarea>
+                                  ng-model="formModel.description"
+                                  required="required"></textarea>
                     </div>
-                    
+
                     <div class="form-group">
-                        <button class="btn btn-lg btn-success" type="submit">Save</button>
+                        <button class="btn btn-lg btn-success" 
+                                ladda="submitting"
+                                data-style="expand-right"
+                                type="submit">
+                            <span ng-show="!submiting">Save</span>
+                            <span ng-show="submiting">Saving</span>
+                        </button>
                     </div>
                 </form>
-                <pre class="">
-                {{formModel | json}}
 
-                </pre>
+                <div id="task-list" class="col-lg-12">
+                    <div class="col-lg-6">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="task in tasks" ng-click="selectTask(task, $index)" 
+                                    ng-class="$index==selectedTaskIndex ? 'selected-row' : ''">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{task.title}}</td>
+                                    <td>{{task.completed}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Details</h3>
+                            </div>
+                            <div class="panel-body">
+                                {{selectedTask.description}}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-
 
         </div>
         <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -62,5 +99,8 @@
         <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
         <script type="text/javascript" src="bower_components/angular-auto-validate/dist/jcs-auto-validate.min.js"></script>
         <script type="text/javascript" src="js/angular-modules/app.js"></script>
+        <script type="text/javascript" src="bower_components/ladda/js/spin.js"></script>
+        <script type="text/javascript" src="bower_components/ladda/dist/ladda.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular-ladda/dist/angular-ladda.min.js"></script>
     </body>
 </html>
