@@ -9,7 +9,7 @@ app.run(function (defaultErrorMessageResolver) {
         errorMessages['shotName'] = 'You must type at least {} characters';
         errorMessages['longName'] = 'You must type no more than {} characters';
         errorMessages['badName'] = 'You must letters"';
-        
+
     });
 
 });
@@ -18,10 +18,16 @@ var api_base = 'http://localhost:8000/api';
 
 app.controller('PersonControler', function ($scope, $http) {
     $scope.formModel = {};
+//
     $scope.formModel.photo = "http://lauriefurman.com/facebook-profile-picture-silhouette-funny-713.jpg";
+//
     $scope.submiting = false;
-    $scope.search = {};
-
+    $scope.search = '';
+    $scope.selectedPerson = null;
+    $scope.people = {};
+    $scope.order = "email";
+    
+    //Submit form
     $scope.onSubmit = function () {
         $scope.submiting = true;
         console.log('submited');
@@ -41,14 +47,14 @@ app.controller('PersonControler', function ($scope, $http) {
                 });
     };
 
-    $scope.selectedPersonIndex = null;
-    $scope.selectedPerson = null;
-    $scope.selectPerson = function (person, index) {
-        $scope.selectedPersonIndex = index;
+    //Select Person
+
+
+    $scope.selectPerson = function (person) {
         $scope.selectedPerson = person;
     };
 
-    $scope.people = {};
+    // Get list
     $http.get(api_base + '/person/')
             .success(function (data) {
                 $scope.people = data;
@@ -57,5 +63,15 @@ app.controller('PersonControler', function ($scope, $http) {
                 console.log(data);
             });
 
+
+
+    $scope.sensitiveSearch = function (person) {
+        if ($scope.search) {
+            return person.name.toLowerCase().indexOf($scope.search.toLowerCase()) === 0 ||
+                    person.email.toLowerCase().indexOf($scope.search.toLowerCase()) === 0;
+
+        }
+        return true;
+    };
 
 });

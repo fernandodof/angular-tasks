@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.5/css/bootstrap-theme.min.css">
         <link rel="stylesheet" type="text/css" href="bower_components/ladda/dist/ladda-themeless.min.css">
         <link rel="stylesheet" type="text/css" href="css/global.css">
     </head>
@@ -83,37 +84,92 @@
                 </form>
 
                 <div id="list">
-                    <!--                    <div class="row col-xs-12">
-                                            <form class="form-inline well well-sm">
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" id="title" placeholder="Name" ng-model="search.title">
-                                                    <span class="glyphicon glyphicon-search"></span>
-                                                </div>
-                                            </form>
-                                        </div>-->
-                    <div class="">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone number</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="person in people">
-                                    <td>{{$index + 1}}</td>
-                                    <td>{{person.name}}</td>
-                                    <td>{{person.email}}</td>
-                                    <td>{{person.phone}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-<!--                    <div class="col-lg-4 pull-right">
+                    <div class="row col-xs-12">
+                        <form class="form-inline well well-sm">
+                            <span class="glyphicon glyphicon-search"></span>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="nameSearch" placeholder="Name" ng-model="search">
+                            </div>
+                            <span class="glyphicon glyphicon-sort-by-attributes" ></span >
 
-                    </div>-->
+                            <div class="form-group" >
+                                <select class="form-control"
+                                        ng-model="order">
+                                    <option value="name" >Name (ASC)</option>
+                                    <option value="-name" >Name (DESC)</option>
+                                    <option value="email" >Email (ASC)</option>
+                                    <option value="-email" >Email (DESC)</option>
+                                </select>
+                            </div> 
+                        </form>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>
+                                            Name
+                                            <span ng-hide="order === 'name'" ng-click="order = 'name'" 
+                                                  class="glyphicon glyphicon-menu-up"></span>
+                                            <span ng-hide="order === '-name'" ng-click="order = '-name'" 
+                                                  class="glyphicon glyphicon-menu-down"></span>
+                                        </th>
+                                        <th>
+                                            Email
+                                            <span ng-hide="order === 'email'" ng-click="order = 'email'" 
+                                                  class="glyphicon glyphicon-menu-up"></span>
+                                            <span ng-hide="order === '-email'" ng-click="order = '-email'" 
+                                                  class="glyphicon glyphicon-menu-down"></span>
+                                        </th>
+                                        <th>Phone number</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="person in filteredPeople = (people | filter:sensitiveSearch | orderBy:order)" 
+                                        ng-click="selectPerson(person)" 
+                                        ng-class="person.pk == selectedPerson.pk ? 'selected-row' : ''">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{person.name}}</td>
+                                        <td>{{person.email}}</td>
+                                        <td>{{person.phone}}</td>
+                                    </tr>
+                                    
+                                    <tr ng-show="filteredPeople.length == 0">
+                                        <td colspan="4">
+                                            <div class="alert alert-info">
+                                                <p class="text-center">
+                                                    No results found for search term '{{search}}'
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Details</div>
+                                <div class="panel-body">
+                                    <dl>
+                                        <dt>Name</dt >
+                                        <dd>{{selectedPerson.name}}</dd>
+                                        <dt>Email</dt >
+                                        <dd>{{selectedPerson.email}}</dd>
+                                        <dt>Birth Date</dt >
+                                        <dd>{{selectedPerson.birthdate}}</dd>
+                                        <dt>Phone Number</dt >
+                                        <dd>{{selectedPerson.phone}}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--                    <div class="col-lg-4 pull-right">
+                    
+                                        </div>-->
 
                 </div>
             </div>
