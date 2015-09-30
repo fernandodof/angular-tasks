@@ -1,6 +1,9 @@
 {
     "elements": {},
     "attributes": {
+        "infinite-scroll-distance": {
+            "context": "table"
+        },
         "ladda": {
             "context": "button"
         }

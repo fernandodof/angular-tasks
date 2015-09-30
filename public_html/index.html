@@ -27,85 +27,28 @@
         </nav>
 
         <div class="container-fluid ">
-            <div class="col-lg-6 col-lg-offset-3" ng-controller="PersonControler">
-                <form novalidate="novalidate" ng-submit="onSubmit()">
-                    <h3 class="text-center">New Contact</h3>
-                    <div class="form-group">
-                        <label for="name">Person Name</label>
-                        <input type="text" id="name" name="name" class="form-control input-lg"
-                               ng-model="formModel.name"
-                               ng-pattern="/^[A-Za-z\s]{1,101}$/"
-                               ng-minlength="2"
-                               ng-maxlength="100"
-                               ng-min-err-type = "shotName"
-                               ng-max-err-type = "longName"
-                               ng-pattern-err-type="badName"
-                               required="required">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" ng-model="formModel.email" required="required" id="email" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="pic">Prifile pictire</label>
-                        <input type="text" ng-model="formModel.photo" required="required" id="pic" class="form-control" 
-                               readonly>
-                    </div>
-
-                    <div class="form-group" >
-                        <label for="sex">Sex</label>
-                        <select class="form-control"
-                                ng-model="formModel.sex" id="sex" required>
-                            <option value="" >Choose here</option >
-                            <option value="Male" >Male</option >
-                            <option value="email" >Female</option >
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="birthdate">Birthdate</label>
-                        <input type="t" ng-model="formModel.birthdate" id="birthdate" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone">Phone number</label>
-                        <input type="text" ng-model="formModel.phone" id="phone" class="form-control" required> 
-                    </div>
-
-                    <div class="form-group">
-                        <button class="btn btn-lg btn-success" 
-                                ladda="submitting"
-                                data-style="expand-right"
-                                type="submit">
-                            <span ng-show="!submiting">Save</span>
-                            <span ng-show="submiting">Saving</span>
-                        </button>
-                    </div>
-                </form>
-
-                <div id="list">
-                    <div class="row col-xs-12">
-                        <form class="form-inline well well-sm">
-                            <span class="glyphicon glyphicon-search"></span>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="nameSearch" placeholder="Name" ng-model="search">
-                            </div>
-                            <span class="glyphicon glyphicon-sort-by-attributes" ></span >
-
-                            <div class="form-group" >
-                                <select class="form-control"
-                                        ng-model="order">
-                                    <option value="name" >Name (ASC)</option>
-                                    <option value="-name" >Name (DESC)</option>
-                                    <option value="email" >Email (ASC)</option>
-                                    <option value="-email" >Email (DESC)</option>
-                                </select>
-                            </div> 
-                        </form>
-                    </div>
+            <div class="row">
+                <div class="col-md-8" ng-controller="PersonListController" >
                     <div class="row">
-                        <div class="col-md-8">
-                            <table class="table table-bordered">
+                        <div class="col-md-12">
+                            <form class="form-inline well well-sm">
+                                <span class="glyphicon glyphicon-search"></span>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="nameSearch" placeholder="Name" ng-model="search">
+                                </div>
+                                <span class="glyphicon glyphicon-sort-by-attributes" ></span >
+
+                                <div class="form-group" >
+                                    <select class="form-control"
+                                            ng-model="order">
+                                        <option value="name" >Name (ASC)</option>
+                                        <option value="-name" >Name (DESC)</option>
+                                        <option value="email" >Email (ASC)</option>
+                                        <option value="-email" >Email (DESC)</option>
+                                    </select>
+                                </div> 
+                            </form>
+                            <table class="table table-bordered" infinite-scroll="loadMorePeople()" infinite-scroll-distance="3">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -127,15 +70,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="person in filteredPeople = (people | filter:sensitiveSearch | orderBy:order)" 
-                                        ng-click="selectPerson(person)" 
-                                        ng-class="person.pk == selectedPerson.pk ? 'selected-row' : ''">
+                                    <tr ng-repeat="person in filteredPeople = (personServiceRef.peopleList | filter:sensitiveSearch | orderBy:order)" 
+                                        ng-click="personServiceRef.selectedPerson = person" 
+                                        ng-class="person.pk == personServiceRef.selectedPerson.pk ? 'selected-row' : ''">
                                         <td>{{$index + 1}}</td>
                                         <td>{{person.name}}</td>
                                         <td>{{person.email}}</td>
                                         <td>{{person.phone}}</td>
                                     </tr>
-                                    
+
                                     <tr ng-show="filteredPeople.length == 0">
                                         <td colspan="4">
                                             <div class="alert alert-info">
@@ -145,32 +88,28 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    
+
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-md-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">Details</div>
-                                <div class="panel-body">
-                                    <dl>
-                                        <dt>Name</dt >
-                                        <dd>{{selectedPerson.name}}</dd>
-                                        <dt>Email</dt >
-                                        <dd>{{selectedPerson.email}}</dd>
-                                        <dt>Birth Date</dt >
-                                        <dd>{{selectedPerson.birthdate}}</dd>
-                                        <dt>Phone Number</dt >
-                                        <dd>{{selectedPerson.phone}}</dd>
-                                    </dl>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-md-4" ng-controller="PersonDetailController">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Details</div>
+                        <div class="panel-body">
+                            <dl>
+                                <dt>Name</dt >
+                                <dd>{{personServiceRef.selectedPerson.name}}</dd>
+                                <dt>Email</dt >
+                                <dd>{{personServiceRef.selectedPerson.email}}</dd>
+                                <dt>Birth Date</dt >
+                                <dd>{{personServiceRef.selectedPerson.birthdate}}</dd>
+                                <dt>Phone Number</dt >
+                                <dd>{{personServiceRef.selectedPerson.phone}}</dd>
+                            </dl>
                         </div>
                     </div>
-                    <!--                    <div class="col-lg-4 pull-right">
-                    
-                                        </div>-->
-
                 </div>
             </div>
         </div>
@@ -182,5 +121,7 @@
         <script type="text/javascript" src="bower_components/ladda/js/spin.js"></script>
         <script type="text/javascript" src="bower_components/ladda/dist/ladda.min.js"></script>
         <script type="text/javascript" src="bower_components/angular-ladda/dist/angular-ladda.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular-resource/angular-resource.min.js"></script> 
+        <script type="text/javascript" src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
     </body>
 </html>
