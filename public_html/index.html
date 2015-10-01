@@ -70,7 +70,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="person in filteredPeople = (personServiceRef.peopleList | filter:sensitiveSearch | orderBy:order)" 
+                                    <tr ng-repeat="person in personServiceRef.peopleList" 
                                         ng-click="personServiceRef.selectedPerson = person" 
                                         ng-class="person.pk == personServiceRef.selectedPerson.pk ? 'selected-row' : ''">
                                         <td>{{$index + 1}}</td>
@@ -79,7 +79,7 @@
                                         <td>{{person.phone}}</td>
                                     </tr>
 
-                                    <tr ng-show="filteredPeople.length == 0">
+                                    <tr ng-show="personServiceRef.peopleList.length === 0">
                                         <td colspan="4">
                                             <div class="alert alert-info">
                                                 <p class="text-center">

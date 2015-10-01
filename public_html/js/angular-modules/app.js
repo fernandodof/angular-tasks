@@ -40,7 +40,7 @@ app.controller('PersonListController', function ($scope, $http, PersonService) {
 //
     $scope.submiting = false;
     $scope.search = '';
-    $scope.order = "email";
+    $scope.order = "name";
     $scope.personServiceRef = PersonService;
     $scope.people = [];
     //Submit form
@@ -63,14 +63,28 @@ app.controller('PersonListController', function ($scope, $http, PersonService) {
                 });
     };
 
-    $scope.sensitiveSearch = function (person) {
-        if ($scope.search) {
-            return person.name.toLowerCase().indexOf($scope.search.toLowerCase()) === 0 ||
-                    person.email.toLowerCase().indexOf($scope.search.toLowerCase()) === 0;
-
+    $scope.$watch('search', function (newVal, oldVal) {
+        console.log(newVal);
+        if (angular.isDefined(newVal)) {
+            $scope.personServiceRef.doSearch(newVal);
         }
-        return true;
-    };
+    });
+
+    $scope.$watch('order', function (newVal, oldVal) {
+        console.log(newVal);
+        if (angular.isDefined(newVal)) {
+            $scope.personServiceRef.doOrder(newVal);
+        }
+    });
+
+//    $scope.sensitiveSearch = function (person) {
+//        if ($scope.search) {
+//            return person.name.toLowerCase().indexOf($scope.search.toLowerCase()) === 0 ||
+//                    person.email.toLowerCase().indexOf($scope.search.toLowerCase()) === 0;
+//
+//        }
+//        return true;
+//    };
 
     $scope.loadMorePeople = function () {
         console.log('Load More');
@@ -97,36 +111,54 @@ app.service('PersonService', function ($http, People) {
                         $scope.submiting = false;
                     });
         },
-        'page' : 1,
-        'hasMore' : true,
-        'isLoading' : false,
+        'page': 1,
+        'hasMore': true,
+        'isLoading': false,
         'selectedPerson': null,
         'peopleList': [],
+        'search': null,
+        'order': null,
+        'doSearch': function (search) {
+            self.hasMore = true;
+            self.page = 1;
+            self.peopleList = [];
+            self.search = search;
+            self.loadPeople();
+        },
+        'doOrder': function (order) {
+            self.hasMore = true;
+            self.page = 1;
+            self.peopleList = [];
+            self.order = order;
+            self.loadPeople();
+        },
         'loadPeople': function () {
-            if(self.hasMore && !self.isLoading){
+            if (self.hasMore && !self.isLoading) {
                 self.isLoading = true;
-                
+
                 var params = {
-                    'page' : self.page
+                    'page': self.page,
+                    'search': self.search,
+                    'order': self.order
                 };
-                
-                People.query(params , function (data) {
-                    angular.forEach(data.results, function(person){
+
+                People.query(params, function (data) {
+                    angular.forEach(data.results, function (person) {
                         self.peopleList.push(new People(person));
                     });
-//                    self.peopleList.push(data.results);
+//                    self.peopleList.concat(data.results);
                     console.log(data);
 
-                    if(!data.next){
+                    if (!data.next) {
                         self.hasMore = false;
                     }
                     self.isLoading = false;
                 });
             }
-            
+
         },
-        'loadMore': function (){
-            if(self.hasMore && !self.isLoading){
+        'loadMore': function () {
+            if (self.hasMore && !self.isLoading) {
                 self.page += 1;
                 self.loadPeople();
             }
