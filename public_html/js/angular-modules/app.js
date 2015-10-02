@@ -2,7 +2,8 @@ var app = angular.module('phonebook', [
     'jcs-autoValidate',
     'angular-ladda',
     'ngResource',
-    'infinite-scroll'
+    'infinite-scroll',
+    'angularSpinner'
 ]);
 
 app.run(function (defaultErrorMessageResolver) {

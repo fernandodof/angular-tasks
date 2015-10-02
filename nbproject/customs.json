@@ -1,6 +1,9 @@
 {
     "elements": {},
     "attributes": {
+        "us-spinner": {
+            "context": "span"
+        },
         "infinite-scroll-distance": {
             "context": "table"
         },
