@@ -20,18 +20,38 @@ app.run(function (defaultErrorMessageResolver) {
 var api_base = 'http://localhost:8000/api';
 
 
-app.config(function ($httpProvider, $resourceProvider) {
+app.config(function ($httpProvider, $resourceProvider, laddaProvider) {
     $resourceProvider.defaults.stripTralingSlashes = false;
+    laddaProvider.setOption({
+        style: 'expand-right'
+    });
 });
 
-app.factory('People', function ($resource) {
-    return $resource(api_base + '/person-paginated/', {}, {
-        query: {method: 'GET', isArray: false}
+//app.factory('People', function ($resource) {
+//    return $resource(api_base + '/person-paginated/', {}, {
+//        query: {method: 'GET', isArray: false}
+//    });
+//});
+
+app.factory('Person', function ($resource) {
+    return $resource(api_base + '/person/:pk', {pk: '@pk'}, {
+        update: {
+            method: 'PUT'
+        }
     });
 });
 
 app.controller('PersonDetailController', function ($scope, PersonService) {
     $scope.personServiceRef = PersonService;
+
+    $scope.save = function () {
+        $scope.personServiceRef.updatePerson($scope.personServiceRef.selectedPerson);
+    };
+
+    $scope.delete = function () {
+        $scope.personServiceRef.deletePerson($scope.personServiceRef.selectedPerson);
+    };
+
 });
 
 app.controller('PersonListController', function ($scope, $http, PersonService) {
@@ -78,22 +98,13 @@ app.controller('PersonListController', function ($scope, $http, PersonService) {
         }
     });
 
-//    $scope.sensitiveSearch = function (person) {
-//        if ($scope.search) {
-//            return person.name.toLowerCase().indexOf($scope.search.toLowerCase()) === 0 ||
-//                    person.email.toLowerCase().indexOf($scope.search.toLowerCase()) === 0;
-//
-//        }
-//        return true;
-//    };
-
     $scope.loadMorePeople = function () {
         console.log('Load More');
         $scope.personServiceRef.loadMore();
     };
 });
 
-app.service('PersonService', function ($http, People) {
+app.service('PersonService', function ($http, Person) {
 
     var peopleList = [];
 
@@ -115,6 +126,8 @@ app.service('PersonService', function ($http, People) {
         'page': 1,
         'hasMore': true,
         'isLoading': false,
+        'isSaving': false,
+        'isDeleting': false,
         'selectedPerson': null,
         'peopleList': [],
         'search': null,
@@ -143,9 +156,9 @@ app.service('PersonService', function ($http, People) {
                     'order': self.order
                 };
 
-                People.query(params, function (data) {
+                Person.get(params, function (data) {
                     angular.forEach(data.results, function (person) {
-                        self.peopleList.push(new People(person));
+                        self.peopleList.push(new Person(person));
                     });
 //                    self.peopleList.concat(data.results);
                     console.log(data);
@@ -163,6 +176,21 @@ app.service('PersonService', function ($http, People) {
                 self.page += 1;
                 self.loadPeople();
             }
+        },
+        'updatePerson': function (person) {
+            self.isSaving = true;
+            person.$update().then(function () {
+                self.isSaving = false;
+            });
+        },
+        'deletePerson': function (person) {
+            self.isDeleting = true;
+            person.$remove().then(function () {
+                self.isDeleting = false;
+                var index = self.peopleList.indexOf(person);
+                self.peopleList.splice(index, 1);
+                self.selectedPerson = null;
+            });
         }
 
 

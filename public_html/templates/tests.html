@@ -13,12 +13,12 @@ and open the template in the editor.
     <body>
         <div>TODO write content</div>
 
-        <form novalidate="novalidate" ng-submit="onSubmit()">
+        <form novalidate="novalidate" ng-submit="save()">
             <h3 class="text-center">New Contact</h3>
             <div class="form-group">
                 <label for="name">Person Name</label>
                 <input type="text" id="name" name="name" class="form-control input-lg"
-                       ng-model="formModel.name"
+                       ng-model="personServiceRef.selectedPerson.name"
                        ng-pattern="/^[A-Za-z\s]{1,101}$/"
                        ng-minlength="2"
                        ng-maxlength="100"
@@ -29,18 +29,18 @@ and open the template in the editor.
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" ng-model="formModel.email" required="required" id="email" class="form-control">
+                <input type="email" ng-model="personServiceRef.selectedPerson.email" required="required" id="email" class="form-control">
             </div>
             <div class="form-group">
                 <label for="pic">Prifile pictire</label>
-                <input type="text" ng-model="formModel.photo" required="required" id="pic" class="form-control" 
+                <input type="text" ng-model="personServiceRef.selectedPerson.photo" required="required" id="pic" class="form-control" 
                        readonly>
             </div>
 
             <div class="form-group" >
                 <label for="sex">Sex</label>
                 <select class="form-control"
-                        ng-model="formModel.sex" id="sex" required>
+                        ng-model="personServiceRef.selectedPerson.sex" id="sex" required>
                     <option value="" >Choose here</option >
                     <option value="Male" >Male</option >
                     <option value="email" >Female</option >
@@ -49,12 +49,12 @@ and open the template in the editor.
 
             <div class="form-group">
                 <label for="birthdate">Birthdate</label>
-                <input type="t" ng-model="formModel.birthdate" id="birthdate" class="form-control" required>
+                <input type="t" ng-model="personServiceRef.selectedPerson.birthdate" id="birthdate" class="form-control" required>
             </div>
 
             <div class="form-group">
                 <label for="phone">Phone number</label>
-                <input type="text" ng-model="formModel.phone" id="phone" class="form-control" required> 
+                <input type="text" ng-model="personServiceRef.selectedPerson.phone" id="phone" class="form-control" required> 
             </div>
 
             <div class="form-group">
