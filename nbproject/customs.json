@@ -1,5 +1,7 @@
 {
-    "elements": {},
+    "elements": {
+        "ng-include": {}
+    },
     "attributes": {
         "us-spinner": {
             "context": "span"

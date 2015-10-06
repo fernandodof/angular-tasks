@@ -12,3 +12,20 @@
         margin-top: 20px;
     }
 }
+
+.delete-button{
+    margin-top: -5px;
+}
+
+#addForm{
+    padding: 0 20px;
+}
+
+.table tr td{
+    vertical-align: middle;
+}
+
+.table tr td .profile-photo{
+    width: 45px;
+    height: 45px;
+}

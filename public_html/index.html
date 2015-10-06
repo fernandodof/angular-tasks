@@ -47,6 +47,11 @@
                                         <option value="-email" >Email (DESC)</option>
                                     </select>
                                 </div> 
+
+
+                                <button class="btn btn-primary pull-right" ng-click="showAddModal()">Add
+                                    <span class="glyphicon glyphicon-plus-sign"></span></button>
+
                             </form>
                             <table class="table table-bordered" infinite-scroll="loadMorePeople()" infinite-scroll-distance="3">
                                 <thead>
@@ -73,7 +78,7 @@
                                     <tr ng-repeat="person in personServiceRef.peopleList" 
                                         ng-click="personServiceRef.selectedPerson = person" 
                                         ng-class="person.pk == personServiceRef.selectedPerson.pk ? 'selected-row' : ''">
-                                        <td>{{$index + 1}}</td>
+                                        <td><img ng-src="{{person.photo}}" class="img-circle profile-photo"/></td>
                                         <td>{{person.name}}</td>
                                         <td>{{person.email}}</td>
                                         <td>{{person.phone}}</td>
@@ -100,70 +105,19 @@
                 </div>
                 <div class="col-md-4" ng-controller="PersonDetailController">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
+                        <div class="panel-heading detail-heading">
                             Details
-                            
-                            <button class="btn btn-sm btn-danger pull-right"
+                            <button class="btn btn-danger btn-sm delete-button pull-right"
                                     ladda="personServiceRef.isDeleting"
-                                    ng-click="delete()" >
-                                    <span ng-show="!personServiceRef.isDeleting">Delete</span>
-                                    <span ng-show="personServiceRef.isDeleting">Deleting</span>
+                                    ng-click="delete()">
+                                <span ng-show="!personServiceRef.isDeleting">Delete <i class="glyphicon glyphicon-remove-sign"></i></span>
+                                <span ng-show="personServiceRef.isDeleting">Deleting</span>
                             </button>
-                            
+
                         </div>
                         <div class="panel-body">
                             <form novalidate="novalidate" ng-submit="save()">
-                                <h3 class="text-center">Contact</h3>
-                                <div class="form-group">
-                                    <label for="name">Person Name</label>
-                                    <input type="text" id="name" name="name" class="form-control"
-                                           ng-model="personServiceRef.selectedPerson.name"
-                                           ng-pattern="/^[A-Za-z\s]{1,101}$/"
-                                           ng-minlength="2"
-                                           ng-maxlength="100"
-                                           ng-min-err-type = "shotName"
-                                           ng-max-err-type = "longName"
-                                           ng-pattern-err-type="badName"
-                                           required="required">
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" ng-model="personServiceRef.selectedPerson.email" required="required" id="email" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="pic">Prifile pictire</label>
-                                    <input type="text" ng-model="personServiceRef.selectedPerson.photo" required="required" id="pic" class="form-control" 
-                                           readonly>
-                                </div>
-
-                                <div class="form-group" >
-                                    <label for="sex">Sex</label>
-                                    <select class="form-control"
-                                            ng-model="personServiceRef.selectedPerson.sex" id="sex" required>
-                                        <option value="" >Choose here</option >
-                                        <option value="Male" >Male</option >
-                                        <option value="email" >Female</option >
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="birthdate">Birthdate</label>
-                                    <input type="t" ng-model="personServiceRef.selectedPerson.birthdate" id="birthdate" class="form-control" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="phone">Phone number</label>
-                                    <input type="text" ng-model="personServiceRef.selectedPerson.phone" id="phone" class="form-control" required> 
-                                </div>
-
-                                <div class="form-group">
-                                    <button class="btn btn-success btn-block" 
-                                            ladda="personServiceRef.isSaving"
-                                            type="submit">
-                                        <span ng-show="!personServiceRef.isSaving">Save</span>
-                                        <span ng-show="personServiceRef.isSaving">Saving</span>
-                                    </button>
-                                </div>
+                                <ng-include src="'templates/addForm.html'"></ng-include>
                             </form>
                         </div>
                     </div>
@@ -180,6 +134,8 @@
         <script type="text/javascript" src="bower_components/angular-ladda/dist/angular-ladda.min.js"></script>
         <script type="text/javascript" src="bower_components/angular-resource/angular-resource.min.js"></script> 
         <script type="text/javascript" src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
         <script src="bower_components/spin.js/spin.js"></script>
         <script src="bower_components/angular-spinner/angular-spinner.min.js"></script>
     </body>

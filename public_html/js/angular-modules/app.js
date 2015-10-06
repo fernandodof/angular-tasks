@@ -3,7 +3,8 @@ var app = angular.module('phonebook', [
     'angular-ladda',
     'ngResource',
     'infinite-scroll',
-    'angularSpinner'
+    'angularSpinner',
+    'mgcrea.ngStrap'
 ]);
 
 app.run(function (defaultErrorMessageResolver) {
@@ -21,23 +22,21 @@ var api_base = 'http://localhost:8000/api';
 
 
 app.config(function ($httpProvider, $resourceProvider, laddaProvider) {
+//    $httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common["X-Requested-With"];
     $resourceProvider.defaults.stripTralingSlashes = false;
     laddaProvider.setOption({
         style: 'expand-right'
     });
 });
 
-//app.factory('People', function ($resource) {
-//    return $resource(api_base + '/person-paginated/', {}, {
-//        query: {method: 'GET', isArray: false}
-//    });
-//});
 
 app.factory('Person', function ($resource) {
     return $resource(api_base + '/person/:pk', {pk: '@pk'}, {
         update: {
             method: 'PUT'
-        }
+        },
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
     });
 });
 
@@ -54,75 +53,53 @@ app.controller('PersonDetailController', function ($scope, PersonService) {
 
 });
 
-app.controller('PersonListController', function ($scope, $http, PersonService) {
+app.controller('PersonListController', function ($scope, $modal, PersonService) {
     $scope.formModel = {};
-//
-    $scope.formModel.photo = "http://lauriefurman.com/facebook-profile-picture-silhouette-funny-713.jpg";
-//
     $scope.submiting = false;
     $scope.search = '';
     $scope.order = "name";
     $scope.personServiceRef = PersonService;
     $scope.people = [];
-    //Submit form
-    $scope.onSubmit = function () {
-        $scope.submiting = true;
-        console.log('submited');
-        console.log($scope.formModel);
 
-        $http.post(api_base + '/person/', $scope.formModel)
-                .success(function (data) {
-                    console.log(data);
-                    console.log('\\o/');
-                    $scope.submiting = false;
-                    $scope.people.push(data);
-                })
-                .error(function (data) {
-                    console.log(data);
-                    console.log(':-)');
-                    $scope.submiting = false;
+    $scope.showAddModal = function () {
+        $scope.personServiceRef.selectedPerson = {};
+        $scope.createModal = $modal({
+            scope: $scope,
+            templateUrl: 'templates/addModal.html',
+            show: true
+        });
+    };
+
+    $scope.addPerson = function () {
+        $scope.personServiceRef.addPerson($scope.personServiceRef.selectedPerson)
+                .then(function () {
+                    $scope.createModal.hide();
                 });
     };
 
     $scope.$watch('search', function (newVal, oldVal) {
-        console.log(newVal);
-        if (angular.isDefined(newVal)) {
+        if (angular.isDefined(newVal) && newVal !== oldVal) {
             $scope.personServiceRef.doSearch(newVal);
         }
     });
 
     $scope.$watch('order', function (newVal, oldVal) {
-        console.log(newVal);
-        if (angular.isDefined(newVal)) {
+        console.log(newVal + " " + oldVal);
+        if (angular.isDefined(newVal) && newVal !== oldVal) {
             $scope.personServiceRef.doOrder(newVal);
         }
     });
 
     $scope.loadMorePeople = function () {
-        console.log('Load More');
         $scope.personServiceRef.loadMore();
     };
 });
 
-app.service('PersonService', function ($http, Person) {
+app.service('PersonService', function (Person, $q) {
 
     var peopleList = [];
 
     var self = {
-        'addPerson': function (person) {
-            $http.post(api_base + '/person/', person)
-                    .success(function (data) {
-                        console.log(data);
-                        console.log('\\o/');
-                        $scope.submiting = false;
-                        $scope.people.push(data);
-                    })
-                    .error(function (data) {
-                        console.log(data);
-                        console.log(':-)');
-                        $scope.submiting = false;
-                    });
-        },
         'page': 1,
         'hasMore': true,
         'isLoading': false,
@@ -149,7 +126,6 @@ app.service('PersonService', function ($http, Person) {
         'loadPeople': function () {
             if (self.hasMore && !self.isLoading) {
                 self.isLoading = true;
-
                 var params = {
                     'page': self.page,
                     'search': self.search,
@@ -191,6 +167,22 @@ app.service('PersonService', function ($http, Person) {
                 self.peopleList.splice(index, 1);
                 self.selectedPerson = null;
             });
+        },
+        'addPerson': function (person) {
+            var d = $q.defer();
+            self.isSaving = true;
+            Person.save(person).$promise.then(function (data) {
+                self.isSaving = false;
+                self.selectedPerson = null;
+                self.hasMore = true;
+                self.page = 1;
+                self.peopleList = [];
+                self.loadPeople();
+                console.log(data);
+                d.resolve();
+            });
+
+            return d.promise;
         }
 
 
