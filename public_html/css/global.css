@@ -29,3 +29,65 @@
     width: 45px;
     height: 45px;
 }
+
+
+.modal-backdrop.am-fade {
+    opacity: .5;
+    transition: opacity .10s linear;
+    &.ng-enter {
+        opacity: 0;
+        &.ng-enter-active {
+            opacity: .5;
+        }
+    }
+    &.ng-leave {
+        opacity: .5;
+        &.ng-leave-active {
+            opacity: 0;
+        }
+    }
+}
+
+.sortables{
+    width: 10px;
+    height: 12px;
+    margin-right: 15px;
+    margin-top: -5px;
+}
+
+.sort-icon{
+    position: absolute;
+    
+}
+.sort-icon:hover{
+    color: lightblue;       
+}
+
+/*.sortables {
+  display: inline-block;
+  position: relative;
+  margin-right: 25px;
+  border: 1px solid black;
+  width: 18px;
+  height: 10px;
+  vertical-align: middle;
+  span:first-child {
+    position: absolute;
+    top: 0;
+    margin-bottom: 0;
+    float: left;
+    clear: red;
+  }
+  span:last-child {
+    position: absolute;
+    bottom: 0;
+    float: left;
+  }
+  span {
+    color: lightgray;
+    font-size: 18px;
+  }
+  span:hover {
+    color: #002a80;
+  }
+}*/

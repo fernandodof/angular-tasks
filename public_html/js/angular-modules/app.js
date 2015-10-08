@@ -4,7 +4,9 @@ var app = angular.module('phonebook', [
     'ngResource',
     'infinite-scroll',
     'angularSpinner',
-    'mgcrea.ngStrap'
+    'mgcrea.ngStrap',
+    'toaster',
+    'ngAnimate'
 ]);
 
 app.run(function (defaultErrorMessageResolver) {
@@ -21,12 +23,17 @@ app.run(function (defaultErrorMessageResolver) {
 var api_base = 'http://localhost:8000/api';
 
 
-app.config(function ($httpProvider, $resourceProvider, laddaProvider) {
+app.config(function ($httpProvider, $resourceProvider, laddaProvider, $datepickerProvider) {
 //    $httpProvider.defaults.useXDomain = true;
-    delete $httpProvider.defaults.headers.common["X-Requested-With"];
+//    delete $httpProvider.defaults.headers.common["X-Requested-With"];
     $resourceProvider.defaults.stripTralingSlashes = false;
     laddaProvider.setOption({
         style: 'expand-right'
+    });
+
+    angular.extend($datepickerProvider.defaults, {
+        dateFormat: 'd/MM/yyyy',
+        autoclose: true
     });
 });
 
@@ -95,7 +102,7 @@ app.controller('PersonListController', function ($scope, $modal, PersonService) 
     };
 });
 
-app.service('PersonService', function (Person, $q) {
+app.service('PersonService', function (Person, $q, toaster) {
 
     var peopleList = [];
 
@@ -157,6 +164,7 @@ app.service('PersonService', function (Person, $q) {
             self.isSaving = true;
             person.$update().then(function () {
                 self.isSaving = false;
+                toaster.pop('success', 'Updated ' + person.name);
             });
         },
         'deletePerson': function (person) {
@@ -166,6 +174,7 @@ app.service('PersonService', function (Person, $q) {
                 var index = self.peopleList.indexOf(person);
                 self.peopleList.splice(index, 1);
                 self.selectedPerson = null;
+                toaster.pop('success', 'Deleted ' + person.name);
             });
         },
         'addPerson': function (person) {
@@ -179,6 +188,7 @@ app.service('PersonService', function (Person, $q) {
                 self.peopleList = [];
                 self.loadPeople();
                 console.log(data);
+                toaster.pop('success', 'Added ' + person.name);
                 d.resolve();
             });
 

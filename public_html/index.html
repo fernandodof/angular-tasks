@@ -6,7 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.5/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.5/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-additions/dist/bootstrap-additions.css">
         <link rel="stylesheet" type="text/css" href="bower_components/ladda/dist/ladda-themeless.min.css">
+        <link rel="stylesheet" type="text/css" href="bower_components/AngularJS-Toaster/toaster.min.css">
+        <link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="css/global.css">
     </head>
     <body>
@@ -27,6 +30,9 @@
         </nav>
 
         <div class="container">
+
+            <toaster-container></toaster-container>
+
             <div class="row">
                 <div class="col-md-8" ng-controller="PersonListController" >
                     <div class="row">
@@ -53,26 +59,36 @@
                                     <span class="glyphicon glyphicon-plus-sign"></span></button>
 
                             </form>
-                            <table class="table table-bordered" infinite-scroll="loadMorePeople()" infinite-scroll-distance="3">
+                            <table class="table table-bordered" infinite-scroll="loadMorePeople()" infinite-scroll-distance="1">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>
-                                            Name
-                                            <span ng-hide="order === 'name'" ng-click="order = 'name'" 
-                                                  class="glyphicon glyphicon-menu-up"></span>
-                                            <span ng-hide="order === '-name'" ng-click="order = '-name'" 
-                                                  class="glyphicon glyphicon-menu-down"></span>
-                                        </th>
-                                        <th>
-                                            Email
-                                            <span ng-hide="order === 'email'" ng-click="order = 'email'" 
-                                                  class="glyphicon glyphicon-menu-up"></span>
-                                            <span ng-hide="order === '-email'" ng-click="order = '-email'" 
-                                                  class="glyphicon glyphicon-menu-down"></span>
-                                        </th>
-                                        <th>Phone number</th>
-                                    </tr>
+
+                                <div class="sortables pull-left">
+                                    <span ng-hide="order === 'name'" ng-click="order = 'name'" 
+                                          class="fa fa-2x fa-sort-asc sort-icon"></span>
+                                    <span ng-hide="order === '-name'" ng-click="order = '-name'" 
+                                          class="fa fa-2x fa-sort-desc sort-icon"></span>
+                                </div>
+                                <div class="pull-left">
+                                    Name
+                                </div>
+                                
+                                </th>
+                                <th>
+                                <div class="sortables pull-left">
+                                    <span ng-hide="order === 'email'" ng-click="order = 'email'" 
+                                          class="fa fa-2x fa-sort-asc sort-icon"></span>
+                                    <span ng-hide="order === '-email'" ng-click="order = '-email'" 
+                                          class="fa fa-2x fa-sort-desc sort-icon"></span>
+                                </div>
+                                <div class="pull-left">
+                                    Email
+                                </div>
+                                </th>
+                                <th>Phone number</th>
+                                </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="person in personServiceRef.peopleList" 
@@ -136,6 +152,8 @@
         <script type="text/javascript" src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
         <script type="text/javascript" src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
         <script type="text/javascript" src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
+        <script type="text/javascript" src="bower_components/AngularJS-Toaster/toaster.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>
         <script src="bower_components/spin.js/spin.js"></script>
         <script src="bower_components/angular-spinner/angular-spinner.min.js"></script>
     </body>
