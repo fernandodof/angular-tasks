@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.5/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.5/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="css/paper-bootstrap-theme.css">
         <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-additions/dist/bootstrap-additions.css">
         <link rel="stylesheet" type="text/css" href="bower_components/ladda/dist/ladda-themeless.min.css">
         <link rel="stylesheet" type="text/css" href="bower_components/AngularJS-Toaster/toaster.min.css">
@@ -13,7 +13,7 @@
         <link rel="stylesheet" type="text/css" href="css/global.css">
     </head>
     <body>
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#">People</a>
@@ -34,110 +34,11 @@
             <toaster-container></toaster-container>
 
             <div class="row">
-                <div class="col-md-8" ng-controller="PersonListController" >
-                    <div class="row">
-                        <div class="col-md-12">
-                            <form class="form-inline well well-sm">
-                                <span class="glyphicon glyphicon-search"></span>
-                                <div class="form-group">
-                                    <input type="text" class="form-control" id="nameSearch" placeholder="Name" ng-model="search">
-                                </div>
-                                <span class="glyphicon glyphicon-sort-by-attributes" ></span >
-
-                                <div class="form-group" >
-                                    <select class="form-control"
-                                            ng-model="order">
-                                        <option value="name" >Name (ASC)</option>
-                                        <option value="-name" >Name (DESC)</option>
-                                        <option value="email" >Email (ASC)</option>
-                                        <option value="-email" >Email (DESC)</option>
-                                    </select>
-                                </div> 
-
-
-                                <button class="btn btn-primary pull-right" ng-click="showAddModal()">Add
-                                    <span class="glyphicon glyphicon-plus-sign"></span></button>
-
-                            </form>
-                            <table class="table table-bordered" infinite-scroll="loadMorePeople()" infinite-scroll-distance="1">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>
-
-                                <div class="sortables pull-left">
-                                    <span ng-hide="order === 'name'" ng-click="order = 'name'" 
-                                          class="fa fa-2x fa-sort-asc sort-icon"></span>
-                                    <span ng-hide="order === '-name'" ng-click="order = '-name'" 
-                                          class="fa fa-2x fa-sort-desc sort-icon"></span>
-                                </div>
-                                <div class="pull-left">
-                                    Name
-                                </div>
-                                
-                                </th>
-                                <th>
-                                <div class="sortables pull-left">
-                                    <span ng-hide="order === 'email'" ng-click="order = 'email'" 
-                                          class="fa fa-2x fa-sort-asc sort-icon"></span>
-                                    <span ng-hide="order === '-email'" ng-click="order = '-email'" 
-                                          class="fa fa-2x fa-sort-desc sort-icon"></span>
-                                </div>
-                                <div class="pull-left">
-                                    Email
-                                </div>
-                                </th>
-                                <th>Phone number</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="person in personServiceRef.peopleList" 
-                                        ng-click="personServiceRef.selectedPerson = person" 
-                                        ng-class="person.pk == personServiceRef.selectedPerson.pk ? 'selected-row' : ''">
-                                        <td><img ng-src="{{person.photo}}" class="img-circle profile-photo"/></td>
-                                        <td>{{person.name}}</td>
-                                        <td>{{person.email}}</td>
-                                        <td>{{person.phone}}</td>
-                                    </tr>
-
-                                    <tr ng-show="personServiceRef.peopleList.length === 0">
-                                        <td colspan="4">
-                                            <div class="alert alert-info">
-                                                <p class="text-center">
-                                                    No results found for search term '{{search}}'
-                                                </p>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                            <div class="spinner" ng-show="personServiceRef.isLoading">
-                                <span us-spinner="{radius:30, width:8, length: 16, lines: 9}"></span>
-                                <p>Loading......</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" ng-controller="PersonDetailController">
-                    <div class="panel panel-default">
-                        <div class="panel-heading detail-heading">
-                            Details
-                            <button class="btn btn-danger btn-sm delete-button pull-right"
-                                    ladda="personServiceRef.isDeleting"
-                                    ng-click="delete()">
-                                <span ng-show="!personServiceRef.isDeleting">Delete <i class="glyphicon glyphicon-remove-sign"></i></span>
-                                <span ng-show="personServiceRef.isDeleting">Deleting</span>
-                            </button>
-
-                        </div>
-                        <div class="panel-body">
-                            <form novalidate="novalidate" ng-submit="save()">
-                                <ng-include src="'templates/addForm.html'"></ng-include>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                <!--List-->
+                <div ui-view></div>
+                
+                <!--Detail-->
+                
             </div>
         </div>
         <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -154,7 +55,8 @@
         <script type="text/javascript" src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
         <script type="text/javascript" src="bower_components/AngularJS-Toaster/toaster.min.js"></script>
         <script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>
-        <script src="bower_components/spin.js/spin.js"></script>
-        <script src="bower_components/angular-spinner/angular-spinner.min.js"></script>
+        <script type="text/javascript" src="bower_components/spin.js/spin.js"></script>
+        <script type="text/javascript" src="bower_components/angular-spinner/angular-spinner.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     </body>
 </html>

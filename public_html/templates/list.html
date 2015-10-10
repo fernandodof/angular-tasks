@@ -1,0 +1,78 @@
+<div class="col-md-12">
+    <form class="form-inline well well-sm">
+        <span class="fa fa-search"></span>
+        <div class="form-group">
+            <input type="text" class="form-control" id="nameSearch" placeholder="Name" ng-model="search">
+        </div>
+        <span class="fa fa-sort" ></span >
+
+        <div class="form-group" >
+            <select class="form-control"
+                    ng-model="order">
+                <option value="name" >Name (ASC)</option>
+                <option value="-name" >Name (DESC)</option>
+                <option value="email" >Email (ASC)</option>
+                <option value="-email" >Email (DESC)</option>
+            </select>
+        </div> 
+
+
+        <button class="btn btn-primary pull-right" ng-click="showAddModal()">Add
+            <span class="fa fa-plus-circle"></span></button>
+
+    </form>
+    <table class="table table-bordered" infinite-scroll="loadMorePeople()" infinite-scroll-distance="1">
+        <thead>
+            <tr>
+                <th class="col-1">#</th>
+                <th class="col-2">
+
+        <div class="sortables pull-left">
+            <span ng-hide="order === 'name'" ng-click="order = 'name'" 
+                  class="fa fa-2x fa-sort-asc sort-icon"></span>
+            <span ng-hide="order === '-name'" ng-click="order = '-name'" 
+                  class="fa fa-2x fa-sort-desc sort-icon"></span>
+        </div>
+        <div class="pull-left">
+            Name
+        </div>
+
+        </th>
+        <th class="col-3">
+        <div class="sortables pull-left">
+            <span ng-hide="order === 'email'" ng-click="order = 'email'" 
+                  class="fa fa-2x fa-sort-asc sort-icon"></span>
+            <span ng-hide="order === '-email'" ng-click="order = '-email'" 
+                  class="fa fa-2x fa-sort-desc sort-icon"></span>
+        </div>
+        <div class="pull-left">
+            Email
+        </div>
+        </th>
+        <th class="col-4">Phone number</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="person in personServiceRef.peopleList" 
+                ng-click="personServiceRef.selectedPerson = person" 
+                ng-class="person.pk == personServiceRef.selectedPerson.pk ? 'selected-row' : ''">
+                <td><img ng-src="{{person.photo| defaultImage:'images/defaultImage.png' }}" class="img-circle profile-photo"/></td>
+                <td>{{person.name}}</td>
+                <td>{{person.email}}</td>
+                <td>{{person.phone}}</td>
+            </tr>
+
+        </tbody>
+    </table>
+    <div ng-show="personServiceRef.peopleList.length === 0">
+        <div class="alert alert-info">
+            <p class="text-center">
+                No results found for search term '{{search}}'
+            </p>
+        </div>
+    </div>
+    <div class="spinner" ng-show="personServiceRef.isLoading">
+        <span us-spinner="{radius:30, width:8, length: 16, lines: 9}"></span>
+        <p>Loading......</p>
+    </div>
+</div>

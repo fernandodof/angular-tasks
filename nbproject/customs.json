@@ -1,6 +1,7 @@
 {
     "elements": {
-        "ng-include": {}
+        "ng-include": {},
+        "toaster-container": {}
     },
     "attributes": {
         "us-spinner": {
@@ -11,6 +12,9 @@
         },
         "ladda": {
             "context": "button"
+        },
+        "ui-view": {
+            "context": "div"
         }
     }
 }

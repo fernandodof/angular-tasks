@@ -6,8 +6,11 @@ var app = angular.module('phonebook', [
     'angularSpinner',
     'mgcrea.ngStrap',
     'toaster',
-    'ngAnimate'
+    'ngAnimate',
+    'ui.router'
 ]);
+
+var api_base = 'http://localhost:8000/api';
 
 app.run(function (defaultErrorMessageResolver) {
     defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
@@ -20,8 +23,20 @@ app.run(function (defaultErrorMessageResolver) {
 
 });
 
-var api_base = 'http://localhost:8000/api';
-
+app.config(function ($stateProvider, $urlRouterProvider) {
+    $stateProvider
+            .state('list', {
+                url: '/',
+                templateUrl: 'templates/list.html',
+                controller: 'PersonListController'
+            })
+            .state('edit', {
+                url: '/edit/:id',
+                templateUrl: 'templates/edit.html',
+                controller: 'PersonDetailController'
+            });
+            $urlRouterProvider.otherwise('/');
+});
 
 app.config(function ($httpProvider, $resourceProvider, laddaProvider, $datepickerProvider) {
 //    $httpProvider.defaults.useXDomain = true;
@@ -45,6 +60,16 @@ app.factory('Person', function ($resource) {
         },
         headers: {'X-Requested-With': 'XMLHttpRequest'}
     });
+});
+
+app.filter("defaultImage", function () {
+    return function (input, param) {
+        var image = input;
+        if (!input) {
+            image = param;
+        }
+        return image;
+    };
 });
 
 app.controller('PersonDetailController', function ($scope, PersonService) {

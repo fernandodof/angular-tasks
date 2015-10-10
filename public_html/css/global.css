@@ -57,37 +57,21 @@
 
 .sort-icon{
     position: absolute;
-    
+
 }
 .sort-icon:hover{
     color: lightblue;       
 }
 
-/*.sortables {
-  display: inline-block;
-  position: relative;
-  margin-right: 25px;
-  border: 1px solid black;
-  width: 18px;
-  height: 10px;
-  vertical-align: middle;
-  span:first-child {
-    position: absolute;
-    top: 0;
-    margin-bottom: 0;
-    float: left;
-    clear: red;
-  }
-  span:last-child {
-    position: absolute;
-    bottom: 0;
-    float: left;
-  }
-  span {
-    color: lightgray;
-    font-size: 18px;
-  }
-  span:hover {
-    color: #002a80;
-  }
-}*/
+
+.table .col-1{
+    width: 10%;
+}
+
+.table td{
+    text-align: center;
+}
+
+.table .col-2, .col-3, .col-4{
+    width: 30%;
+}

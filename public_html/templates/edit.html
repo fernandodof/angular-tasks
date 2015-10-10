@@ -1,0 +1,19 @@
+<div class="col-md-8 col-md-offset-2 ">
+    <div class="panel panel-default">
+        <div class="panel-heading detail-heading">
+            Details
+            <button class="btn btn-danger btn-sm delete-button pull-right"
+                    ladda="personServiceRef.isDeleting"
+                    ng-click="delete()">
+                <span ng-show="!personServiceRef.isDeleting">Delete <i class="fa fa-trash"></i></span>
+                <span ng-show="personServiceRef.isDeleting">Deleting</span>
+            </button>
+
+        </div>
+        <div class="panel-body">
+            <form novalidate="novalidate" ng-submit="save()">
+                <ng-include src="'templates/addForm.html'"></ng-include>
+            </form>
+        </div>
+    </div>
+</div>
