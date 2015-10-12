@@ -27,13 +27,34 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
             .state('list', {
                 url: '/',
-                templateUrl: 'templates/list.html',
-                controller: 'PersonListController'
+                views: {
+                    'main': {
+                        templateUrl: 'templates/list.html',
+                        controller: 'PersonListController'
+                    },
+                    'search': {
+                        templateUrl: 'templates/searchForm.html',
+                        controller: 'PersonDetailController'
+                    }
+                }
             })
             .state('edit', {
                 url: '/edit/:id',
-                templateUrl: 'templates/edit.html',
-                controller: 'PersonDetailController'
+                views: {
+                    'main': {
+                        templateUrl: 'templates/edit.html',
+                        controller: 'PersonDetailController'
+                    }
+                }
+            })
+            .state('create', {
+                url: '/create',
+                views: {
+                    'main': {
+                        templateUrl: 'templates/edit.html',
+                        controller: 'PersonCreateController'
+                    }
+                }
             });
     $urlRouterProvider.otherwise('/');
 });
@@ -72,10 +93,10 @@ app.filter("defaultImage", function () {
     };
 });
 
+
 app.controller('PersonDetailController', function ($scope, $stateParams, $state, PersonService) {
     $scope.personServiceRef = PersonService;
-
-    console.log($stateParams);
+    $scope.mode = "Edit";
 
     $scope.personServiceRef.selectedPerson = $scope.personServiceRef.getPerson($stateParams.id);
 
@@ -93,6 +114,21 @@ app.controller('PersonDetailController', function ($scope, $stateParams, $state,
 
 });
 
+app.controller('PersonCreateController', function ($scope, $state, PersonService) {
+    $scope.personServiceRef = PersonService;
+    $scope.personServiceRef.selectedPerson = null;
+    $scope.mode = "Create";
+
+    $scope.save = function () {
+        console.log("Creating");
+        $scope.personServiceRef.addPerson($scope.personServiceRef.selectedPerson)
+                .then(function () {
+                    $state.go("list");
+                });
+    };
+
+});
+
 app.controller('PersonListController', function ($scope, $modal, PersonService) {
     $scope.formModel = {};
     $scope.submiting = false;
@@ -101,41 +137,21 @@ app.controller('PersonListController', function ($scope, $modal, PersonService) 
     $scope.personServiceRef = PersonService;
     $scope.people = [];
 
-    $scope.showAddModal = function () {
-        $scope.personServiceRef.selectedPerson = {};
-        $scope.createModal = $modal({
-            scope: $scope,
-            templateUrl: 'templates/addModal.html',
-            show: true
-        });
-    };
-
-    $scope.addPerson = function () {
-        $scope.personServiceRef.addPerson($scope.personServiceRef.selectedPerson)
-                .then(function () {
-                    $scope.createModal.hide();
-                });
-    };
-
-    $scope.$watch('search', function (newVal, oldVal) {
-        if (angular.isDefined(newVal) && newVal !== oldVal) {
-            $scope.personServiceRef.doSearch(newVal);
-        }
-    });
-
-    $scope.$watch('order', function (newVal, oldVal) {
-        console.log(newVal + " " + oldVal);
-        if (angular.isDefined(newVal) && newVal !== oldVal) {
-            $scope.personServiceRef.doOrder(newVal);
-        }
-    });
+//    $scope.showAddModal = function () {
+//        $scope.personServiceRef.selectedPerson = {};
+//        $scope.createModal = $modal({
+//            scope: $scope,
+//            templateUrl: 'templates/addModal.html',
+//            show: true
+//        });
+//    };
 
     $scope.loadMorePeople = function () {
         $scope.personServiceRef.loadMore();
     };
 });
 
-app.service('PersonService', function (Person, $q, toaster) {
+app.service('PersonService', function (Person, $rootScope, $q, toaster) {
 
     var peopleList = [];
 
@@ -148,7 +164,7 @@ app.service('PersonService', function (Person, $q, toaster) {
         'selectedPerson': null,
         'peopleList': [],
         'search': null,
-        'order': null,
+        'order': 'name',
         'getPerson': function (id) {
             for (var i = 0; i < self.peopleList.length; i++) {
                 if (self.peopleList[i].pk == id) {
@@ -156,18 +172,16 @@ app.service('PersonService', function (Person, $q, toaster) {
                 }
             }
         },
-        'doSearch': function (search) {
+        'doSearch': function () {
             self.hasMore = true;
             self.page = 1;
             self.peopleList = [];
-            self.search = search;
             self.loadPeople();
         },
-        'doOrder': function (order) {
+        'doOrder': function () {
             self.hasMore = true;
             self.page = 1;
             self.peopleList = [];
-            self.order = order;
             self.loadPeople();
         },
         'loadPeople': function () {
@@ -183,7 +197,6 @@ app.service('PersonService', function (Person, $q, toaster) {
                     angular.forEach(data.results, function (person) {
                         self.peopleList.push(new Person(person));
                     });
-//                    self.peopleList.concat(data.results);
                     console.log(data);
 
                     if (!data.next) {
@@ -239,12 +252,30 @@ app.service('PersonService', function (Person, $q, toaster) {
             });
 
             return d.promise;
+        },
+        'watchFilters': function () {
+            $rootScope.$watch(function () {
+                return self.search;
+            }, function (newVal) {
+                if (angular.isDefined(newVal)) {
+                    self.doSearch();
+                }
+            });
+            $rootScope.$watch(function () {
+                return self.order;
+            }, function (newVal) {
+                if (angular.isDefined(newVal)) {
+                    self.doOrder();
+                }
+
+            });
         }
 
 
     };
 
     self.loadPeople();
+    self.watchFilters();
 
     return self;
 

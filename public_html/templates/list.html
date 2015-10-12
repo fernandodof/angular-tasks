@@ -1,26 +1,4 @@
 <div class="col-md-12">
-    <form class="form-inline well well-sm">
-        <span class="fa fa-search"></span>
-        <div class="form-group">
-            <input type="text" class="form-control" id="nameSearch" placeholder="Name" ng-model="search">
-        </div>
-        <span class="fa fa-sort" ></span >
-
-        <div class="form-group" >
-            <select class="form-control"
-                    ng-model="order">
-                <option value="name" >Name (ASC)</option>
-                <option value="-name" >Name (DESC)</option>
-                <option value="email" >Email (ASC)</option>
-                <option value="-email" >Email (DESC)</option>
-            </select>
-        </div> 
-
-
-        <button class="btn btn-primary pull-right" ng-click="showAddModal()">Add
-            <span class="fa fa-plus-circle"></span></button>
-
-    </form>
     <table class="table table-bordered" infinite-scroll="loadMorePeople()" infinite-scroll-distance="1">
         <thead>
             <tr>
@@ -64,10 +42,10 @@
 
         </tbody>
     </table>
-    <div ng-show="personServiceRef.peopleList.length === 0">
+    <div ng-show="!personServiceRef.isLoading && personServiceRef.peopleList.length === 0">
         <div class="alert alert-info">
             <p class="text-center">
-                No results found for search term '{{search}}'
+                No results found for search term '{{personServiceRef.search}}'
             </p>
         </div>
     </div>

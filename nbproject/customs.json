@@ -15,6 +15,12 @@
         },
         "ui-view": {
             "context": "div"
+        },
+        "ui-sref": {
+            "context": "a"
+        },
+        "ui-sref-active": {
+            "context": "li"
         }
     }
 }

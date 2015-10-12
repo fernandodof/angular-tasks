@@ -13,7 +13,7 @@
     }
 }
 
-.delete-button{
+#delete-button, #create-button{
     margin-top: -5px;
 }
 
