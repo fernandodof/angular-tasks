@@ -35,7 +35,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
                 templateUrl: 'templates/edit.html',
                 controller: 'PersonDetailController'
             });
-            $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/');
 });
 
 app.config(function ($httpProvider, $resourceProvider, laddaProvider, $datepickerProvider) {
@@ -72,15 +72,23 @@ app.filter("defaultImage", function () {
     };
 });
 
-app.controller('PersonDetailController', function ($scope, PersonService) {
+app.controller('PersonDetailController', function ($scope, $stateParams, $state, PersonService) {
     $scope.personServiceRef = PersonService;
 
+    console.log($stateParams);
+
+    $scope.personServiceRef.selectedPerson = $scope.personServiceRef.getPerson($stateParams.id);
+
     $scope.save = function () {
-        $scope.personServiceRef.updatePerson($scope.personServiceRef.selectedPerson);
+        $scope.personServiceRef.updatePerson($scope.personServiceRef.selectedPerson).then(function () {
+            $state.go("list");
+        });
     };
 
     $scope.delete = function () {
-        $scope.personServiceRef.deletePerson($scope.personServiceRef.selectedPerson);
+        $scope.personServiceRef.deletePerson($scope.personServiceRef.selectedPerson).then(function () {
+            $state.go("list");
+        });
     };
 
 });
@@ -141,6 +149,13 @@ app.service('PersonService', function (Person, $q, toaster) {
         'peopleList': [],
         'search': null,
         'order': null,
+        'getPerson': function (id) {
+            for (var i = 0; i < self.peopleList.length; i++) {
+                if (self.peopleList[i].pk == id) {
+                    return self.peopleList[i];
+                }
+            }
+        },
         'doSearch': function (search) {
             self.hasMore = true;
             self.page = 1;
@@ -186,13 +201,17 @@ app.service('PersonService', function (Person, $q, toaster) {
             }
         },
         'updatePerson': function (person) {
+            var d = $q.defer();
             self.isSaving = true;
             person.$update().then(function () {
                 self.isSaving = false;
                 toaster.pop('success', 'Updated ' + person.name);
+                d.resolve();
             });
+            return d.promise;
         },
         'deletePerson': function (person) {
+            var d = $q.defer();
             self.isDeleting = true;
             person.$remove().then(function () {
                 self.isDeleting = false;
@@ -200,7 +219,9 @@ app.service('PersonService', function (Person, $q, toaster) {
                 self.peopleList.splice(index, 1);
                 self.selectedPerson = null;
                 toaster.pop('success', 'Deleted ' + person.name);
+                d.resolve();
             });
+            return d.promise;
         },
         'addPerson': function (person) {
             var d = $q.defer();

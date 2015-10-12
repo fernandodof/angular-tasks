@@ -54,7 +54,7 @@
         </thead>
         <tbody>
             <tr ng-repeat="person in personServiceRef.peopleList" 
-                ng-click="personServiceRef.selectedPerson = person" 
+                ui-sref="edit({id:person.pk})"
                 ng-class="person.pk == personServiceRef.selectedPerson.pk ? 'selected-row' : ''">
                 <td><img ng-src="{{person.photo| defaultImage:'images/defaultImage.png' }}" class="img-circle profile-photo"/></td>
                 <td>{{person.name}}</td>
