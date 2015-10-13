@@ -21,8 +21,7 @@
 
 <div class="form-group" >
     <label for="sex">Sex</label>
-    <select class="form-control"
-            ng-model="personServiceRef.selectedPerson.sex" id="sex" required>
+    <select class="form-control" ng-model="personServiceRef.selectedPerson.sex" id="sex" required>
         <option value="" >Choose here</option >
         <option value="Male" >Male</option >
         <option value="Female" >Female</option >
@@ -31,13 +30,29 @@
 
 <div class="form-group">
     <label for="birthdate">Birthdate</label>
-    <input type="t" ng-model="personServiceRef.selectedPerson.birthdate" id="birthdate" class="form-control" required bs-datepicker>
+    <div class='input-group date' id='birthdate'>
+        <input ng-model="personServiceRef.selectedPerson.birthdate" type='text' class="form-control" required/>
+        <span class="input-group-addon">
+            <span class="fa fa-calendar"></span>
+        </span>
+    </div>
+
 </div>
 
 <div class="form-group">
     <label for="phone">Phone number</label>
     <input type="text" ng-model="personServiceRef.selectedPerson.phone" id="phone" class="form-control" required> 
 </div>
+
+
+<!--<script type="text/javascript">
+    $(function () {
+        $('#birthdate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+    });
+</script>-->
+
 <!--
 <div class="form-group">
     <button class="btn btn-success btn-block" 

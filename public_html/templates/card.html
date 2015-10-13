@@ -2,7 +2,7 @@
     <div class="well well-sm">
         <div class="row">
             <div class="col-md-4">
-                <img ng-src="{{person.photo}}"
+                <img ng-src="{{person.photo| defaultImage:'images/defaultImage.png' }}"
                      alt=""
                      class="img-rounded img-responsive profile-photo"/>
             </div>
@@ -17,8 +17,10 @@
                     <br />
                     <i class="fa fa-gift" ></i>
                     {{person.birthdate| date:"longDate"}}
+                    <br/>
+                    <i class="fa fa-phone-square" ></i>
+                    {{person.phone}}
                 </p >
-
 
                 <button type="button"
                         class="btn btn-default btn-sm"
