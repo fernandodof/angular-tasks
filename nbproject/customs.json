@@ -1,6 +1,7 @@
 {
     "elements": {
         "ng-include": {},
+        "cc-spinner": {},
         "toaster-container": {}
     },
     "attributes": {

@@ -1,14 +1,21 @@
 <div class="col-md-12">
-    <table class="table table-bordered" infinite-scroll="loadMorePeople()" infinite-scroll-distance="1">
+    
+    <div class="row" infinite-scroll="loadMorePeople()" infinite-scroll-distance="2">
+        
+        <cc-card ng-repeat="person in personServiceRef.peopleList" person="person" delete-person="parentDeletePerson"></cc-card>
+        
+    </div>
+    
+<!--    <table class="table table-bordered" infinite-scroll="loadMorePeople()" infinite-scroll-distance="1">
         <thead>
             <tr>
-                <th class="col-1">#</th>
+                <th class="col-1"></th>
                 <th class="col-2">
 
         <div class="sortables pull-left">
-            <span ng-hide="order === 'name'" ng-click="order = 'name'" 
+            <span ng-hide="personServiceRef.order === 'name'" ng-click="personServiceRef.order = 'name'" 
                   class="fa fa-2x fa-sort-asc sort-icon"></span>
-            <span ng-hide="order === '-name'" ng-click="order = '-name'" 
+            <span ng-hide="personServiceRef.order === '-name'" ng-click="personServiceRef.order = '-name'" 
                   class="fa fa-2x fa-sort-desc sort-icon"></span>
         </div>
         <div class="pull-left">
@@ -18,9 +25,9 @@
         </th>
         <th class="col-3">
         <div class="sortables pull-left">
-            <span ng-hide="order === 'email'" ng-click="order = 'email'" 
+            <span ng-hide="personServiceRef.order === 'email'" ng-click="personServiceRef.order = 'email'" 
                   class="fa fa-2x fa-sort-asc sort-icon"></span>
-            <span ng-hide="order === '-email'" ng-click="order = '-email'" 
+            <span ng-hide="personServiceRef.order === '-email'" ng-click="personServiceRef.order = '-email'" 
                   class="fa fa-2x fa-sort-desc sort-icon"></span>
         </div>
         <div class="pull-left">
@@ -34,7 +41,7 @@
             <tr ng-repeat="person in personServiceRef.peopleList" 
                 ui-sref="edit({id:person.pk})"
                 ng-class="person.pk == personServiceRef.selectedPerson.pk ? 'selected-row' : ''">
-                <td><img ng-src="{{person.photo| defaultImage:'images/defaultImage.png' }}" class="img-circle profile-photo"/></td>
+                <td class="col-1"><img ng-src="{{person.photo| defaultImage:'images/defaultImage.png' }}" class="img-circle profile-photo"/></td>
                 <td>{{person.name}}</td>
                 <td>{{person.email}}</td>
                 <td>{{person.phone}}</td>
@@ -49,8 +56,7 @@
             </p>
         </div>
     </div>
-    <div class="spinner" ng-show="personServiceRef.isLoading">
-        <span us-spinner="{radius:30, width:8, length: 16, lines: 9}"></span>
-        <p>Loading......</p>
-    </div>
+    
+    <cc-spinner is-loading="personServiceRef.isLoading"></cc-spinner>-->
+    
 </div>

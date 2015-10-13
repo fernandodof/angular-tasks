@@ -60,8 +60,6 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 });
 
 app.config(function ($httpProvider, $resourceProvider, laddaProvider, $datepickerProvider) {
-//    $httpProvider.defaults.useXDomain = true;
-//    delete $httpProvider.defaults.headers.common["X-Requested-With"];
     $resourceProvider.defaults.stripTralingSlashes = false;
     laddaProvider.setOption({
         style: 'expand-right'
@@ -83,6 +81,37 @@ app.factory('Person', function ($resource) {
     });
 });
 
+app.directive('ccSpinner', function () {
+    return {
+        'restrict': 'AE',
+        'templateUrl': 'templates/spinner.html',
+        'scope': {
+            isLoading: '='
+        }
+    };
+});
+
+app.directive('ccCard', function () {
+    return {
+        'restrict': 'AE',
+        'templateUrl': 'templates/card.html',
+        'scope': {
+            'person': '='
+//            'deletePerson': '&'
+        },
+        'controller': function ($scope, PersonService) {
+            $scope.isDeleting = false;
+
+            $scope.deletePerson = function () {
+                $scope.isDeleting = true;
+                PersonService.deletePerson($scope.person).then(function () {
+                    $scope.isDeleting = false;
+                });
+            };
+        }
+    };
+});
+
 app.filter("defaultImage", function () {
     return function (input, param) {
         var image = input;
@@ -92,7 +121,6 @@ app.filter("defaultImage", function () {
         return image;
     };
 });
-
 
 app.controller('PersonDetailController', function ($scope, $stateParams, $state, PersonService) {
     $scope.personServiceRef = PersonService;
@@ -137,18 +165,16 @@ app.controller('PersonListController', function ($scope, $modal, PersonService) 
     $scope.personServiceRef = PersonService;
     $scope.people = [];
 
-//    $scope.showAddModal = function () {
-//        $scope.personServiceRef.selectedPerson = {};
-//        $scope.createModal = $modal({
-//            scope: $scope,
-//            templateUrl: 'templates/addModal.html',
-//            show: true
-//        });
-//    };
-
     $scope.loadMorePeople = function () {
         $scope.personServiceRef.loadMore();
     };
+
+
+//    $scope.parentDeletePerson = function (person) {
+//        console.log(person);
+//        $scope.personServiceRef.deletePerson(person);
+//    };
+
 });
 
 app.service('PersonService', function (Person, $rootScope, $q, toaster) {

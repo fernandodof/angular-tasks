@@ -1,3 +1,7 @@
+#main-container{
+    margin-top: 40px;
+}
+
 .selected-row{
     background-color: lightblue;
 }
@@ -21,14 +25,22 @@
     padding: 0 20px;
 }
 
-.table tr td{
-    vertical-align: middle;
-}
-
 .table tr td .profile-photo{
     width: 45px;
     height: 45px;
 }
+
+/*.card .profile-photo{
+    width: 140px;
+}*/
+
+.card{
+    margin-bottom: 30px;
+}
+
+.card, .profile-photo{
+    height: 150px;
+}   
 
 
 .modal-backdrop.am-fade {
@@ -64,11 +76,8 @@
 }
 
 
-.table .col-1{
+.col-1{
     width: 10%;
-}
-
-.table td{
     text-align: center;
 }
 
